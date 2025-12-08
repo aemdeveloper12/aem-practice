@@ -46,7 +46,7 @@
     <bnd.version>6.4.0</bnd.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <aem.sdk.api>2025.11.23482.20251120T200914Z-251100</aem.sdk.api>
+    <aem.sdk.api>2023.10.13804.20231005T183332Z-231000</aem.sdk.api>
     <aemanalyser.version>1.6.6</aemanalyser.version>
     <componentGroupName>AEM Practice</componentGroupName>
   </properties>
