@@ -7,6 +7,7 @@ import org.osgi.service.component.propertytypes.ServiceRanking;
 
 @Component(service = MessageService.class, immediate = true)
 @ServiceRanking(value = 999)
+
 public class MessageServiceImpl1  implements MessageService{
 
     @Override

@@ -39,7 +39,8 @@ public class GreetingModel {
     @OSGiService
     GreetingService greetingService;
 
-    @OSGiService
+
+    @OSGiService(filter = "(component.name=com.training.aempractice.core.services.impl.MessageServiceImpl1)")
     MessageService messageService;
 
     public String getGreetingService()
