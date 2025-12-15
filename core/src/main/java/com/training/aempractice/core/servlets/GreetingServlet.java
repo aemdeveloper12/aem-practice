@@ -1,6 +1,7 @@
 package com.training.aempractice.core.servlets;
 
 import com.training.aempractice.core.services.GreetingService;
+import com.training.aempractice.core.services.MessageService;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
@@ -8,6 +9,9 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.json.*;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.Servlet;
 import java.io.IOException;
 
@@ -20,8 +24,13 @@ property = {
 )
 public class GreetingServlet  extends SlingSafeMethodsServlet {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
 @Reference
   private GreetingService greetingService;
+
+    @Reference
+    private MessageService messageService;
 
 protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
 
@@ -31,11 +40,18 @@ protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse r
     if (name == null) {
        name="Student";
     }
-    String  message = greetingService.getGreeting(name);
+
+    log.info("Request received with name: {}", name);
+    String greeting = greetingService.getGreeting(name);
+    String message = messageService.getMessage(name);
+
+    log.info("GreetingService response: {}", greeting);
+    log.info("MessageService response: {}", message);
 
     JSONObject json = new JSONObject();
     try {
-        json.put("Greeting", message);
+        json.put("Greeting", greeting);
+        json.put("message", message);
     } catch (JSONException e) {
         throw new RuntimeException(e);
     }
