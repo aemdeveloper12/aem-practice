@@ -8,6 +8,6 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 @ObjectClassDefinition(description = "AEM practise definitions", name="AEM pratice config")
 public @interface SampleConfigrations {
 
-  @AttributeDefinition(name="Payment gateway URL",  description = "Payment Config url", type = AttributeType.STRING)
-    String paymentUrl() default "https://www.payment.gateway.com";
+  @AttributeDefinition(name="json gateway URL",  description = "json Config url", type = AttributeType.STRING)
+    String jsonUrl() default "https://dummyjson.com/todos/1";
 }

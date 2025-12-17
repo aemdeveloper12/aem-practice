@@ -1,8 +1,7 @@
 package com.training.aempractice.core.services.impl;
 
-import com.training.aempractice.core.services.PaymentConfigs;
+import com.training.aempractice.core.services.JsonConfigs;
 import com.training.aempractice.core.services.ReadURLData;
-import org.apache.http.HttpConnection;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -10,12 +9,10 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -25,12 +22,12 @@ public class ReadURLDataImpl implements ReadURLData {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Reference
-    PaymentConfigs paymentConfigs;
+    JsonConfigs jsonConfigs;
 
     @Override
     public String getJsonDatafromURI() throws IOException {
 
-        String apiurl=paymentConfigs.getPaymentUrl();
+        String apiurl=jsonConfigs.getjsonUrl();
 
         URL url =new URL(apiurl);
         //open connection
