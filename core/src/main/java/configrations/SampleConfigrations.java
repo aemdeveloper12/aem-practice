@@ -1,4 +1,4 @@
-package com.training.aempractice.core.services.Configrations;
+package configrations;
 
 
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -10,4 +10,6 @@ public @interface SampleConfigrations {
 
   @AttributeDefinition(name="json gateway URL",  description = "json Config url", type = AttributeType.STRING)
     String jsonUrl() default "https://dummyjson.com/todos/1";
+
+
 }

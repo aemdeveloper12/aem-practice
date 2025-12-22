@@ -1,6 +1,6 @@
 package com.training.aempractice.core.services.impl;
 
-import com.training.aempractice.core.services.Configrations.SampleConfigrations;
+import configrations.SampleConfigrations;
 import com.training.aempractice.core.services.JsonConfigs;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
