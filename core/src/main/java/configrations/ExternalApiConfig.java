@@ -8,7 +8,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 public @interface  ExternalApiConfig {
 
     @AttributeDefinition(description = "Base URL of the external API", name = "External API URL",type= AttributeType.STRING)
-    String externalApiUrl() default "https://dummyjson.com/todos/vamsi" ;
+    String externalApiUrl() default "https://dummyjson.com/todos/1" ;
 
 
 

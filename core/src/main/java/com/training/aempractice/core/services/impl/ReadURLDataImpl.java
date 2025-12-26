@@ -1,5 +1,6 @@
 package com.training.aempractice.core.services.impl;
 
+import com.training.aempractice.core.services.ExternalAPIConfigsService;
 import com.training.aempractice.core.services.JsonConfigs;
 import com.training.aempractice.core.services.ReadURLData;
 import org.osgi.service.component.annotations.Activate;
@@ -24,10 +25,13 @@ public class ReadURLDataImpl implements ReadURLData {
     @Reference
     JsonConfigs jsonConfigs;
 
+    @Reference
+    ExternalAPIConfigsService externalAPIConfigsService;
+
     @Override
     public String getJsonDatafromURI() throws IOException {
 
-        String apiurl=jsonConfigs.getjsonUrl();
+        String apiurl= externalAPIConfigsService.externalUrl();
 
         URL url =new URL(apiurl);
         //open connection
