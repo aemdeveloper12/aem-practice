@@ -1,0 +1,61 @@
+<input type="hidden" id="servletPath" value="${resource.path}" />
+
+<button onclick="makeRequest()">Submit</button>
+
+<div id="response"></div>
+
+<script>
+function makeRequest() {
+
+    // STEP 1: Get CSRF token
+    var csrfRequest = new XMLHttpRequest();
+    csrfRequest.open("GET", "/libs/granite/csrf/token.json", true);
+
+    csrfRequest.onreadystatechange = function () {
+        if (csrfRequest.readyState === 4 && csrfRequest.status === 200) {
+
+            var csrfResponse = JSON.parse(csrfRequest.responseText);
+            var csrfToken = csrfResponse.token;
+
+            // STEP 2: Call servlet with CSRF token
+            callServlet(csrfToken);
+        }
+    };
+
+    csrfRequest.send();
+}
+
+function callServlet(csrfToken) {
+
+    var xhr = new XMLHttpRequest();
+    var url = document.getElementById("servletPath").value + ".json";
+
+    console.log("Calling:", url);
+
+    xhr.open("POST", url, true);
+
+    // ADD CSRF HEADER
+    xhr.setRequestHeader("CSRF-Token", csrfToken);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                document.getElementById("response").innerHTML = xhr.responseText;
+            } else {
+                document.getElementById("response").innerHTML = "Error occurred";
+            }
+        }
+    };
+
+    xhr.send();
+}
+</script>
+
+
+<h1>This is my From Feedback Component</h1>
+
+<sly data-sly-use.model="com.training.aempractice.core.models.FeedbackModel"></sly>
+
+<div>
+    <p>${model.textarea}</p>
+</div>
