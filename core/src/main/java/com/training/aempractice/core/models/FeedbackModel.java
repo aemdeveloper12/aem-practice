@@ -14,6 +14,6 @@ public class FeedbackModel {
 
 
     @ValueMapValue
-    private String textarea;
+    private String comment;
 
 }

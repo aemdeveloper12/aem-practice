@@ -1,61 +1,77 @@
-<input type="hidden" id="servletPath" value="${resource.path}" />
-
-<button onclick="makeRequest()">Submit</button>
-
-<div id="response"></div>
-
-<script>
-function makeRequest() {
-
-    // STEP 1: Get CSRF token
-    var csrfRequest = new XMLHttpRequest();
-    csrfRequest.open("GET", "/libs/granite/csrf/token.json", true);
-
-    csrfRequest.onreadystatechange = function () {
-        if (csrfRequest.readyState === 4 && csrfRequest.status === 200) {
-
-            var csrfResponse = JSON.parse(csrfRequest.responseText);
-            var csrfToken = csrfResponse.token;
-
-            // STEP 2: Call servlet with CSRF token
-            callServlet(csrfToken);
-        }
-    };
-
-    csrfRequest.send();
-}
-
-function callServlet(csrfToken) {
-
-    var xhr = new XMLHttpRequest();
-    var url = document.getElementById("servletPath").value + ".json";
-
-    console.log("Calling:", url);
-
-    xhr.open("POST", url, true);
-
-    // ADD CSRF HEADER
-    xhr.setRequestHeader("CSRF-Token", csrfToken);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                document.getElementById("response").innerHTML = xhr.responseText;
-            } else {
-                document.getElementById("response").innerHTML = "Error occurred";
-            }
-        }
-    };
-
-    xhr.send();
-}
-</script>
-
-
 <h1>This is my From Feedback Component</h1>
 
 <sly data-sly-use.model="com.training.aempractice.core.models.FeedbackModel"></sly>
 
 <div>
-    <p>${model.textarea}</p>
+    <p>${model.comment}</p>
 </div>
+
+<sly data-sly-test="${wcmmode.edit}">
+    <div style="border:1px dashed #ccc; padding:10px;">
+        Feedback Component (Author Mode)
+    </div>
+</sly>
+
+<div class="feedback-component">
+
+    <!-- Feedback Textarea -->
+    <textarea id="feedbackComment"
+              rows="5"
+              placeholder="Enter your feedback here...">
+  </textarea>
+
+    <br/><br/>
+
+    <!-- Submit Button -->
+    <button type="button" onclick="submitFeedback()">
+        Submit
+    </button>
+
+    <!-- Result -->
+    <div id="feedbackResult" style="margin-top:15px; font-weight:bold;"></div>
+
+</div>
+
+<script>
+    function submitFeedback() {
+
+      const comment = document.getElementById("feedbackComment").value.trim();
+
+      if (!comment) {
+        document.getElementById("feedbackResult").innerHTML =
+          "Please enter feedback.";
+        return;
+      }
+
+      // Resource-type servlet URL
+      const servletUrl = "${resource.path @ context='uri'}.json";
+
+      // Fetch CSRF token
+      fetch("/libs/granite/csrf/token.json")
+        .then(res => res.json())
+        .then(tokenData => {
+
+          return fetch(servletUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "CSRF-Token": tokenData.token
+            },
+            body: JSON.stringify({
+              comment: comment
+            })
+          });
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("feedbackResult").innerHTML =
+            "Feedback submitted successfully!";
+          document.getElementById("feedbackComment").value = "";
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("feedbackResult").innerHTML =
+            "Error submitting feedback.";
+        });
+    }
+</script>
