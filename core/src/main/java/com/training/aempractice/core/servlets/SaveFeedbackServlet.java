@@ -1,10 +1,13 @@
 package com.training.aempractice.core.servlets;
 
-import com.training.aempractice.core.services.ReadURLData;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.training.aempractice.core.utils.CommonUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.resource.*;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.osgi.service.component.annotations.Component;
@@ -15,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component(
         service = Servlet.class,
@@ -29,56 +35,73 @@ public class SaveFeedbackServlet extends SlingAllMethodsServlet {
     private static final Logger LOG = LoggerFactory.getLogger(SaveFeedbackServlet.class);
 
     @Reference
-    private ReadURLData readURLData;
-
-    @Reference
     private ResourceResolverFactory resolverFactory;
 
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
 
-
         LOG.info("SaveFeedbackServlet :: POST request started");
-        long timestamp = System.currentTimeMillis();
-        String userAgent= request.getHeader("User-Agent");
+
+        response.setContentType("application/json");
         ResourceResolver resourceResolver = null;
 
         try {
+            // 1. Parse JSON body
+            JsonObject json =
+                    JsonParser.parseReader(request.getReader()).getAsJsonObject();
+
+            if (!json.has("comment")) {
+                response.setStatus(SlingHttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\":\"comment is required\"}");
+                return;
+            }
+
+            String comment = json.get("comment").getAsString();
+            String userAgent = request.getHeader("User-Agent");
+
+            // 2. Get service resolver (write access)
             resourceResolver = CommonUtils.getWriteResolver(resolverFactory);
             LOG.debug("Service ResourceResolver obtained");
 
-            String jsonData = readURLData.getJsonDatafromURI();
-            LOG.debug("JSON data received from service: {}", jsonData);
+            // 3. Get parent resource
+            Resource parent =
+                    resourceResolver.getResource("/content/aempractice/feedbackdata");
 
-            Resource resource = resourceResolver.getResource("/content/aempractice/feedbackdata");
-
-            if (resource == null) {
+            if (parent == null) {
                 LOG.error("Target resource not found");
-                response.sendError(SlingHttpServletResponse.SC_NOT_FOUND, "Target resource not found");
+                response.sendError(
+                        SlingHttpServletResponse.SC_NOT_FOUND,
+                        "Target resource not found"
+                );
                 return;
             }
 
-            ModifiableValueMap valueMap = resource.adaptTo(ModifiableValueMap.class);
-            if (valueMap == null) {
-                LOG.error("Failed to adapt resource to ModifiableValueMap");
-                response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to update node");
-                return;
-            }
+            // 4. Prepare properties
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("comment", comment);
+            properties.put("timestamp", Instant.now().toString());
+            properties.put("userAgent", userAgent);
 
-            valueMap.put("jsonMessage", jsonData);
-            valueMap.put("Timestamp", timestamp);
-            valueMap.put("UserAgent", userAgent);
+            // 5. Create resource
+            resourceResolver.create(
+                    parent,
+                    "feedback-" + System.currentTimeMillis(),
+                    properties
+            );
+
+            // 6. Commit changes
             resourceResolver.commit();
-
             LOG.info("JSON data saved successfully");
 
-            response.setContentType("application/json");
             response.getWriter().write("{\"status\":\"success\"}");
 
         } catch (Exception e) {
             LOG.error("Error while saving JSON data", e);
-            response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR, "JSON creation failed");
+            response.sendError(
+                    SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "JSON save failed"
+            );
         } finally {
             if (resourceResolver != null && resourceResolver.isLive()) {
                 resourceResolver.close();
