@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:deviceGroups="[mobile/groups/responsive]"
+        cq:lastModified="{Date}2026-01-20T08:09:48.578+05:30"
+        cq:lastModifiedBy="admin"
+        cq:template="/conf/aempractice/settings/wcm/templates/three-column-layout"
+        jcr:primaryType="cq:PageContent"
+        sling:resourceType="aempractice/components/page">
+        <root
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="aempractice/components/container"
+            layout="responsiveGrid">
+            <experiencefragment-header
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/experiencefragment"
+                fragmentVariationPath="/content/experience-fragments/aempractice/us/en/site/header/master"/>
+            <container
+                jcr:lastModified="{Date}2026-01-20T08:09:04.496+05:30"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/container"
+                editable="{Boolean}true"/>
+            <text
+                jcr:created="{Date}2026-01-19T22:57:16.731+05:30"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2026-01-20T07:50:47.394+05:30"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/text"
+                editable="{Boolean}true"/>
+            <container_1694604268
+                jcr:created="{Date}2026-01-20T07:57:35.287+05:30"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2026-01-20T07:57:35.287+05:30"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/container">
+                <cq:responsive jcr:primaryType="nt:unstructured">
+                    <default
+                        jcr:primaryType="nt:unstructured"
+                        offset="0"
+                        width="3"/>
+                </cq:responsive>
+            </container_1694604268>
+            <container_341699050
+                jcr:created="{Date}2026-01-20T07:57:44.962+05:30"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2026-01-20T07:57:44.962+05:30"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/container">
+                <cq:responsive jcr:primaryType="nt:unstructured">
+                    <default
+                        jcr:primaryType="nt:unstructured"
+                        offset="0"
+                        width="6"/>
+                </cq:responsive>
+            </container_341699050>
+            <container_25975616
+                jcr:created="{Date}2026-01-20T07:57:54.045+05:30"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2026-01-20T07:57:54.045+05:30"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="aempractice/components/container">
+                <cq:responsive jcr:primaryType="nt:unstructured">
+                    <default
+                        jcr:primaryType="nt:unstructured"
+                        offset="0"
+                        width="3"/>
+                </cq:responsive>
+            </container_25975616>
+        </root>
+        <cq:responsive jcr:primaryType="nt:unstructured">
+            <breakpoints jcr:primaryType="nt:unstructured">
+                <phone
+                    jcr:primaryType="nt:unstructured"
+                    title="Smaller Screen"
+                    width="{Long}768"/>
+                <tablet
+                    jcr:primaryType="nt:unstructured"
+                    title="Tablet"
+                    width="{Long}1200"/>
+            </breakpoints>
+        </cq:responsive>
+    </jcr:content>
+</jcr:root>
