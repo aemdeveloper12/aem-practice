@@ -1,0 +1,29 @@
+<h1>This is component with Multiple Tabs</h1>
+
+<h4> Today's Date with Formatting: ${'yyyy-MM-dd' @format=properties.date} </h4>
+
+<h1>Iterating Array of Strings for Multifield</h1>
+
+<div style="background-color:blue">
+    <ul data-sly-repeat=${properties.multitext}>
+        <li>
+            ${item}
+        </li>
+    </ul>
+</div>
+
+<h1>Iterating for MultiComposite field</h1>
+
+<div style="background-color:purple">
+
+    <sly data-sly-list.multiButtons= ${resource.getChildren}>
+
+        <div data-sly-list.object=${multiButtons.getChildren}>
+
+            <a href="${object.ctaLink}">${object.ctaText}</a>
+
+        </div>
+
+    </sly>
+
+</div>
